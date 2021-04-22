@@ -1,0 +1,27 @@
+---
+- block:
+  - name: backup mysql db
+    script:
+      cmd: zabbix-dump  -o {{ zabbix_backup_folder }}
+
+  when: mysql_status.stdout == "1"
+
+- block: ### if using postgresql_db
+  - name: backup postgresql db
+    script:
+      cmd: zabbix-dump -t psql -o {{ zabbix_backup_folder }}
+
+  when: mysql_status.stdout == "0"
+
+
+
+
+
+
+
+
+
+
+
+
+

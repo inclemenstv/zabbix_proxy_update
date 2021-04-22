@@ -1,0 +1,19 @@
+---
+- name: Upgrade zabbix-proxy-mysql
+  apt:
+    name: zabbix-proxy-mysql
+    state: latest
+    only_upgrade: yes
+  when: mysql_status.stdout == "1"
+
+- name: Upgrade zabbix-proxy-mysql
+  apt:
+    name: zabbix-proxy-sqlite3
+    state: latest
+    only_upgrade: yes
+  when: mysql_status.stdout == "0"
+
+- name: start zabbix-server and agent
+  service:
+    name: zabbix-proxy
+    state: started

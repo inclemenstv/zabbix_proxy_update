@@ -1,0 +1,20 @@
+---
+- name: Check if redis is installed
+  shell: zabbix_proxy --version | awk 'NR==1{print $3}' | cut -c1-3
+  register: zabbix_proxy
+
+- debug:
+    msg: "Zabbix-proxy has already been updated, current version = {{ zabbix_proxy.stdout }}"
+  when: zabbix_proxy.stdout == zabbix_version | string
+
+- name: End the play for hosts that current zabbix-version == {{ zabbix_version.stdout }}
+  meta: end_host
+  when: zabbix_proxy.stdout == zabbix_version | string
+
+- shell: "which mysql | wc -l"
+  register: mysql_status
+
+- name: STOP ZABBIX_PROXY PROCESSES
+  service:
+    name: zabbix-proxy
+    state: stopped
